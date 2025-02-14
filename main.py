@@ -1,11 +1,12 @@
-import sqlite3
-from flask import Flask, render_template, request, jsonify
 import os
+import psycopg2
+from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-def connect_db():
-    return sqlite3.connect("/mnt/data/acupoints.db")
+# 连接 Supabase PostgreSQL
+DATABASE_URL = os.environ.get("DATABASE_URL")
+conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 
 @app.route('/')
 def index():
