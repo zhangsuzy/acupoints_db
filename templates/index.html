@@ -10,7 +10,7 @@
             text-align: center;
             padding: 20px;
         }
-        input, button {
+        select, button {
             margin: 5px;
             padding: 10px;
             font-size: 16px;
@@ -26,10 +26,42 @@
 <body>
 
     <h2>穴位查询</h2>
-    <input type="text" id="meridian" placeholder="请输入经络名称 (如：肺经)">
-    <input type="text" id="category" placeholder="请输入穴位类别 (如：原穴)">
+
+    <!-- 经络下拉菜单 -->
+    <label for="meridian">选择经络：</label>
+    <select id="meridian">
+        <option value="肺经">肺经</option>
+        <option value="心经">心经</option>
+        <option value="心包经">心包经</option>
+        <option value="大肠经">大肠经</option>
+        <option value="小肠经">小肠经</option>
+        <option value="三焦经">三焦经</option>
+        <option value="脾经">脾经</option>
+        <option value="肾经">肾经</option>
+        <option value="肝经">肝经</option>
+        <option value="胃经">胃经</option>
+        <option value="膀胱经">膀胱经</option>
+        <option value="胆经">胆经</option>
+    </select>
+
+    <!-- 穴位类别下拉菜单 -->
+    <label for="category">选择穴位类别：</label>
+    <select id="category">
+        <option value="原穴">原穴</option>
+        <option value="络穴">络穴</option>
+        <option value="背俞穴">背俞穴</option>
+        <option value="募穴">募穴</option>
+        <option value="郄穴">郄穴</option>
+        <option value="八会穴">八会穴</option>
+        <option value="八脉交会穴">八脉交会穴</option>
+        <option value="下合穴">下合穴</option>
+        <option value="四总穴">四总穴</option>
+    </select>
+
+    <!-- 查询按钮 -->
     <button onclick="queryAcupoints()">查询穴位</button>
 
+    <!-- 结果显示 -->
     <div id="result"></div>
 
     <script>
@@ -38,7 +70,7 @@
             let category = document.getElementById("category").value;
 
             if (!meridian || !category) {
-                document.getElementById("result").innerText = "❌ 请输入经络和穴位类别！";
+                document.getElementById("result").innerText = "❌ 请选择经络和穴位类别！";
                 return;
             }
 
