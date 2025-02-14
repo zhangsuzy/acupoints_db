@@ -6,11 +6,14 @@ app = Flask(__name__)
 
 # 连接 Supabase PostgreSQL
 DATABASE_URL = os.environ.get("DATABASE_URL")
-conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+conn = psycopg2.connect(DATABASE_URL, sslmode='prefer')
 
-@app.route('/')
+
+@app.route('/', methods=['GET', 'HEAD'])
 def index():
-    return render_template('index.html')
+        if request.method == 'HEAD':
+            return '', 200  # 处理 HEAD 请求，避免报错
+        return render_template('index.html')
 
 @app.route('/get_acupoints', methods=['GET'])
 def get_acupoints():
