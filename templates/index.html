@@ -3,68 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>腧穴查询系统</title>
-    <link rel="stylesheet" href="/static/styles.css">
+    <title>穴位查询</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        input, button {
+            margin: 5px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            white-space: pre-line;
+            text-align: left;
+        }
+    </style>
 </head>
 <body>
-    <h1>腧穴查询系统</h1>
-    <form id="searchForm">
-        <label for="meridian">选择经络：</label>
-        <select id="meridian" name="meridian">
-            <option value="肺经">肺经</option>
-            <option value="心经">心经</option>
-            <option value="脾经">脾经</option>
-            <option value="肝经">肝经</option>
-            <option value="胃经">胃经</option>
-            <option value="肾经">肾经</option>
-            <option value="三焦经">三焦经</option>
-            <option value="胆经">胆经</option>
-            <option value="任脉">任脉</option>
-            <option value="督脉">督脉</option>
-        </select>
-        
-        <label for="category">选择穴位类别：</label>
-        <select id="category" name="category">
-            <option value="原穴">原穴</option>
-            <option value="络穴">络穴</option>
-            <option value="背俞穴">背俞穴</option>
-            <option value="募穴">募穴</option>
-            <option value="郄穴">郄穴</option>
-            <option value="八会穴">八会穴</option>
-            <option value="八脉交会穴">八脉交会穴</option>
-            <option value="下合穴">下合穴</option>
-            <option value="四总穴">四总穴</option>
-        </select>
-        
-        <button type="submit">查询</button>
-    </form>
-    
-    <h2>查询结果</h2>
-    <div id="results"></div>
-    
+
+    <h2>穴位查询</h2>
+    <input type="text" id="meridian" placeholder="请输入经络名称 (如：肺经)">
+    <input type="text" id="category" placeholder="请输入穴位类别 (如：原穴)">
+    <button onclick="queryAcupoints()">查询穴位</button>
+
+    <div id="result"></div>
+
     <script>
-        document.getElementById("searchForm").addEventListener("submit", function(event) {
-            event.preventDefault();
-            const meridian = document.getElementById("meridian").value;
-            const category = document.getElementById("category").value;
-            
-            fetch(`/get_acupoints?meridian=${meridian}&category=${category}`)
+        function queryAcupoints() {
+            let meridian = document.getElementById("meridian").value;
+            let category = document.getElementById("category").value;
+
+            if (!meridian || !category) {
+                document.getElementById("result").innerText = "❌ 请输入经络和穴位类别！";
+                return;
+            }
+
+            let apiUrl = `https://acupoints-db.onrender.com/get_acupoints?meridian=${encodeURIComponent(meridian)}&category=${encodeURIComponent(category)}`;
+
+            fetch(apiUrl)
                 .then(response => response.json())
                 .then(data => {
-                    let resultHTML = "";
-                    if (data.length > 0) {
-                        data.forEach(acupoint => {
-                            resultHTML += `<p><strong>${acupoint.name}</strong> (${acupoint.code})<br>
-                            <em>主治:</em> ${acupoint.indications}<br>
-                            <em>配穴:</em> ${acupoint.pairing} (${acupoint.pairing_code})</p><hr>`;
+                    if (data.acupoints.length > 0) {
+                        let resultText = "✅ 查询结果：\n";
+                        data.acupoints.forEach(acupoint => {
+                            resultText += `穴位: ${acupoint.name} (${acupoint.code})\n主治: ${acupoint.indications}\n配穴: ${acupoint.pairing} (${acupoint.pairing_code})\n\n`;
                         });
+                        document.getElementById("result").innerText = resultText;
                     } else {
-                        resultHTML = "<p>未找到相关腧穴信息。</p>";
+                        document.getElementById("result").innerText = "⚠️ 未找到相关穴位，请检查输入！";
                     }
-                    document.getElementById("results").innerHTML = resultHTML;
                 })
-                .catch(error => console.error("查询失败", error));
-        });
+                .catch(error => {
+                    console.error("API 请求失败", error);
+                    document.getElementById("result").innerText = "❌ 查询失败，请稍后再试！";
+                });
+        }
     </script>
+
 </body>
 </html>
