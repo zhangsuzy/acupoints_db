@@ -55,6 +55,7 @@ def get_acupoints():
         print(f" 查询数据库失败: {e}")
         return jsonify({"error": "Database query failed"}), 500
 
+
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 1888))
+    port = int(os.environ.get("PORT", 10000))  # Render 可能分配端口 10000
     app.run(host='0.0.0.0', port=port, debug=True)
