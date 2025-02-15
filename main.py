@@ -5,10 +5,15 @@ from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)  # 允许跨域访问
+CORS(app, resources={r"/*": {"origins": "*"}})  # 允许所有前端访问
+
+
 
 # ✅ 打印 DATABASE_URL，确保环境变量正确
-DATABASE_URL = os.environ.get("DATABASE_URL")
+
+
+
+os.environ["DATABASE_URL"] = DATABASE_URL
 print(f"📌 DATABASE_URL: {DATABASE_URL}")
 
 
